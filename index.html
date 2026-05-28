@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>面接一問一答</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+:root {
+  --blue-50: #EFF6FF;
+  --blue-100: #DBEAFE;
+  --blue-200: #BFDBFE;
+  --blue-500: #3B82F6;
+  --blue-600: #2563EB;
+  --blue-700: #1D4ED8;
+  --blue-800: #1E40AF;
+  --gray-50: #F8FAFC;
+  --gray-100: #F1F5F9;
+  --gray-200: #E2E8F0;
+  --gray-400: #94A3B8;
+  --gray-500: #64748B;
+  --gray-700: #334155;
+  --gray-900: #0F172A;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Yu Gothic', sans-serif;
+  background: var(--gray-50);
+  color: var(--gray-900);
+  min-height: 100vh;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* ── Header ── */
+.header {
+  background: var(--blue-700);
+  color: #fff;
+  padding: 14px 16px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 10px rgba(0,0,0,.18);
+}
+.header-inner { display: flex; align-items: center; justify-content: space-between; }
+.header h1 { font-size: 18px; font-weight: 700; }
+.header .subtitle { font-size: 12px; color: var(--blue-200); margin-top: 2px; }
+.btn-study {
+  background: #fff;
+  color: var(--blue-700);
+  border: none;
+  border-radius: 20px;
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.btn-study:active { opacity: .8; }
+
+/* ── Content ── */
+.content { padding: 14px 14px 90px; }
+
+/* ── Question Card ── */
+.question-card {
+  background: #fff;
+  border-radius: 14px;
+  margin-bottom: 12px;
+  box-shadow: 0 1px 4px rgba(0,0,0,.08);
+  overflow: hidden;
+}
+
+.question-header {
+  display: flex;
+  align-items: flex-start;
+  padding: 14px 14px 10px;
+  gap: 10px;
+}
+.q-num {
+  background: var(--blue-600);
+  color: #fff;
+  border-radius: 50%;
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.q-text {
+  flex: 1;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.55;
+  cursor: pointer;
+  word-break: break-all;
+}
+.q-actions { display: flex; gap: 2px; flex-shrink: 0; }
+
+.icon-btn {
+  background: none;
+  border: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 15px;
+  color: var(--gray-400);
+}
+.icon-btn:active { background: var(--gray-100); }
+.icon-btn.del { color: #F87171; }
+
+.q-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 14px 10px 50px;
+}
+.ans-badge {
+  background: var(--blue-100);
+  color: var(--blue-600);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+.expand-btn {
+  background: none;
+  border: none;
+  color: var(--blue-500);
+  font-size: 12px;
+  cursor: pointer;
+  padding: 2px 4px;
+}
+
+/* ── Answers ── */
+.answers-section { border-top: 1px solid var(--gray-100); padding: 4px 14px 10px; }
+.answer-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--gray-100);
+}
+.answer-item:last-of-type { border-bottom: none; }
+.a-bullet { width: 6px; height: 6px; background: var(--blue-400, #60A5FA); border-radius: 50%; flex-shrink: 0; margin-top: 7px; }
+.a-text { flex: 1; font-size: 14px; line-height: 1.55; color: var(--gray-700); word-break: break-all; }
+.a-actions { display: flex; gap: 2px; flex-shrink: 0; }
+
+.add-ans-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: var(--blue-50);
+  color: var(--blue-600);
+  border: 1.5px dashed var(--blue-200);
+  border-radius: 10px;
+  padding: 9px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 6px;
+}
+.add-ans-btn:active { background: var(--blue-100); }
+
+/* ── FAB ── */
+.fab {
+  position: fixed;
+  bottom: 22px;
+  right: 20px;
+  background: var(--blue-600);
+  color: #fff;
+  border: none;
+  border-radius: 28px;
+  padding: 14px 20px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 18px rgba(37,99,235,.45);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 50;
+}
+.fab:active { opacity: .85; transform: scale(.97); }
+
+/* ── Empty State ── */
+.empty-state {
+  text-align: center;
+  padding: 60px 24px;
+}
+.empty-state .icon { font-size: 52px; margin-bottom: 16px; }
+.empty-state h3 { font-size: 17px; font-weight: 700; color: var(--gray-700); margin-bottom: 8px; }
+.empty-state p { font-size: 14px; color: var(--gray-500); line-height: 1.6; }
+
+/* ── Modal (Bottom Sheet) ── */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.5);
+  z-index: 200;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+.overlay.hidden { display: none; }
+
+.sheet {
+  background: #fff;
+  border-radius: 22px 22px 0 0;
+  width: 100%;
+  max-width: 600px;
+  padding: 20px 18px;
+  padding-bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+}
+.sheet h2 { font-size: 17px; font-weight: 700; margin-bottom: 14px; }
+.sheet textarea {
+  width: 100%;
+  border: 1.5px solid var(--gray-200);
+  border-radius: 12px;
+  padding: 12px;
+  font-size: 15px;
+  font-family: inherit;
+  resize: none;
+  line-height: 1.55;
+  outline: none;
+  color: var(--gray-900);
+}
+.sheet textarea:focus { border-color: var(--blue-500); }
+.sheet-actions { display: flex; gap: 10px; margin-top: 14px; }
+.btn-cancel {
+  flex: 1;
+  background: var(--gray-100);
+  color: var(--gray-700);
+  border: none;
+  border-radius: 12px;
+  padding: 14px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.btn-save {
+  flex: 2;
+  background: var(--blue-600);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  padding: 14px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.btn-save:active { opacity: .85; }
+
+/* ── Confirm Dialog ── */
+.confirm-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.5);
+  z-index: 300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.confirm-overlay.hidden { display: none; }
+.confirm-box {
+  background: #fff;
+  border-radius: 18px;
+  padding: 24px 20px;
+  width: 100%;
+  max-width: 300px;
+  text-align: center;
+}
+.confirm-box h3 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+.confirm-box p { font-size: 14px; color: var(--gray-500); margin-bottom: 22px; line-height: 1.5; }
+.confirm-actions { display: flex; gap: 10px; }
+.btn-cd {
+  flex: 1;
+  background: var(--gray-100);
+  color: var(--gray-700);
+  border: none;
+  border-radius: 10px;
+  padding: 13px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.btn-del {
+  flex: 1;
+  background: #EF4444;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 13px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* ── Study Mode ── */
+.study-view {
+  display: none;
+  flex-direction: column;
+  min-height: 100vh;
+  background: linear-gradient(160deg, var(--blue-800) 0%, var(--blue-600) 100%);
+}
+.study-view.active { display: flex; }
+.list-view.hidden { display: none; }
+
+.study-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px 8px;
+}
+.btn-back {
+  background: rgba(255,255,255,.15);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  padding: 8px 14px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.btn-back:active { background: rgba(255,255,255,.25); }
+.study-counter { color: #fff; font-size: 15px; font-weight: 700; }
+.study-shuffle {
+  background: rgba(255,255,255,.15);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  padding: 8px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.study-shuffle:active { background: rgba(255,255,255,.25); }
+
+.study-progress { height: 4px; background: rgba(255,255,255,.2); margin: 6px 16px; border-radius: 4px; }
+.study-bar { height: 100%; background: #fff; border-radius: 4px; transition: width .3s ease; }
+
+.study-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 18px;
+  gap: 16px;
+}
+
+.study-card {
+  background: #fff;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 520px;
+  min-height: 280px;
+  padding: 28px 22px;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  box-shadow: 0 10px 40px rgba(0,0,0,.25);
+  transition: transform .12s ease;
+  user-select: none;
+}
+.study-card:active { transform: scale(.98); }
+
+.study-tag {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+.study-tag.q { color: var(--blue-500); }
+.study-tag.a { color: #10B981; }
+
+.study-q { font-size: 18px; font-weight: 600; line-height: 1.6; color: var(--gray-900); }
+.study-divider { height: 1px; background: var(--gray-200); margin: 16px 0; }
+.study-a { font-size: 15px; line-height: 1.7; color: var(--gray-700); white-space: pre-wrap; }
+
+.study-hint {
+  color: rgba(255,255,255,.7);
+  font-size: 13px;
+  text-align: center;
+}
+
+.study-nav {
+  display: flex;
+  gap: 10px;
+  padding: 0 18px;
+  padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+  width: 100%;
+  max-width: 600px;
+  align-self: center;
+}
+.btn-nav {
+  flex: 1;
+  background: rgba(255,255,255,.18);
+  color: #fff;
+  border: none;
+  border-radius: 16px;
+  padding: 16px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.btn-nav:active { background: rgba(255,255,255,.28); }
+.btn-nav.primary { background: #fff; color: var(--blue-700); flex: 2; }
+.btn-nav.primary:active { opacity: .85; }
+.btn-nav:disabled { opacity: .35; cursor: default; }
+</style>
+</head>
+<body>
+
+<!-- ── List View ── -->
+<div class="list-view" id="listView">
+  <div class="header">
+    <div class="header-inner">
+      <div>
+        <h1>面接一問一答</h1>
+        <div class="subtitle" id="qCount">0問</div>
+      </div>
+      <button class="btn-study" onclick="startStudy()">学習モード ▶</button>
+    </div>
+  </div>
+  <div class="content" id="qList"></div>
+  <button class="fab" onclick="openModal('addQ')">＋ 質問を追加</button>
+</div>
+
+<!-- ── Study View ── -->
+<div class="study-view" id="studyView">
+  <div class="study-header">
+    <button class="btn-back" onclick="exitStudy()">← 一覧</button>
+    <div class="study-counter" id="studyCnt">1 / 1</div>
+    <button class="study-shuffle" onclick="shuffleStudy()">シャッフル</button>
+  </div>
+  <div class="study-progress"><div class="study-bar" id="studyBar"></div></div>
+  <div class="study-body">
+    <div class="study-card" id="studyCard" onclick="flipCard()">
+      <div class="study-tag q">Q 質問</div>
+      <div class="study-q" id="studyQ"></div>
+      <div id="studyASection" style="display:none">
+        <div class="study-divider"></div>
+        <div class="study-tag a">A 回答</div>
+        <div class="study-a" id="studyA"></div>
+      </div>
+    </div>
+    <div class="study-hint" id="studyHint">タップして回答を表示</div>
+  </div>
+  <div class="study-nav">
+    <button class="btn-nav" id="btnPrev" onclick="prevQ()">← 前へ</button>
+    <button class="btn-nav primary" id="btnNext" onclick="nextQ()">次へ →</button>
+  </div>
+</div>
+
+<!-- ── Bottom Sheet Modal ── -->
+<div class="overlay hidden" id="overlay" onclick="handleOverlayClick(event)">
+  <div class="sheet">
+    <h2 id="sheetTitle">質問を追加</h2>
+    <textarea id="sheetTA" rows="4" placeholder="テキストを入力..."></textarea>
+    <div class="sheet-actions">
+      <button class="btn-cancel" onclick="closeModal()">キャンセル</button>
+      <button class="btn-save" onclick="saveModal()">保存する</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Confirm Dialog ── -->
+<div class="confirm-overlay hidden" id="confirmOverlay">
+  <div class="confirm-box">
+    <h3 id="confirmTitle">削除しますか？</h3>
+    <p id="confirmMsg"></p>
+    <div class="confirm-actions">
+      <button class="btn-cd" onclick="closeConfirm()">キャンセル</button>
+      <button class="btn-del" onclick="execConfirm()">削除する</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── State ──
+let db = { questions: [] };
+let expanded = new Set();
+let modal = { mode: null, qId: null, aId: null };
+let confirmCb = null;
+let study = { list: [], idx: 0, flipped: false };
+
+// ── Persistence ──
+const KEY = 'interview-qa-v1';
+function save() { localStorage.setItem(KEY, JSON.stringify(db)); }
+function load() {
+  const raw = localStorage.getItem(KEY);
+  if (raw) { db = JSON.parse(raw); return; }
+  // サンプルデータ
+  db = { questions: [
+    { id: uid(), text: '自己紹介をしてください。', answers: [
+      { id: uid(), text: '〇〇大学〇〇学部を卒業し、△△株式会社にて3年間Webシステム開発を担当しました。チームリーダーも経験し、プロジェクト管理スキルも身につけております。' }
+    ]},
+    { id: uid(), text: '志望動機を教えてください。', answers: [
+      { id: uid(), text: '貴社の〇〇事業に強く共感しております。これまでの経験を活かしながら、貴社でさらに成長できると確信し志望いたしました。' }
+    ]},
+    { id: uid(), text: 'あなたの強みと弱みを教えてください。', answers: [
+      { id: uid(), text: '強みは課題解決力です。弱みは完璧主義になりすぎる点ですが、タスク管理を徹底することで改善に努めています。' }
+    ]},
+  ]};
+  save();
+}
+function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2); }
+
+// ── Render ──
+function esc(s) {
+  return String(s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/\n/g,'<br>');
+}
+
+function render() {
+  document.getElementById('qCount').textContent = `${db.questions.length}問`;
+  const el = document.getElementById('qList');
+  if (!db.questions.length) {
+    el.innerHTML = `<div class="empty-state">
+      <div class="icon">📋</div>
+      <h3>質問がありません</h3>
+      <p>右下のボタンから<br>最初の質問を追加しましょう</p>
+    </div>`;
+    return;
+  }
+  el.innerHTML = db.questions.map((q, i) => {
+    const open = expanded.has(q.id);
+    const ansHTML = q.answers.map(a => `
+      <div class="answer-item">
+        <div class="a-bullet"></div>
+        <div class="a-text">${esc(a.text)}</div>
+        <div class="a-actions">
+          <button class="icon-btn" onclick="openModal('editA','${q.id}','${a.id}')">✏️</button>
+          <button class="icon-btn del" onclick="askDel('answer','${q.id}','${a.id}')">🗑</button>
+        </div>
+      </div>`).join('');
+    return `
+      <div class="question-card">
+        <div class="question-header">
+          <div class="q-num">${i+1}</div>
+          <div class="q-text" onclick="toggle('${q.id}')">${esc(q.text)}</div>
+          <div class="q-actions">
+            <button class="icon-btn" onclick="openModal('editQ','${q.id}')">✏️</button>
+            <button class="icon-btn del" onclick="askDel('question','${q.id}')">🗑</button>
+          </div>
+        </div>
+        <div class="q-meta">
+          <span class="ans-badge">${q.answers.length}件の回答</span>
+          <button class="expand-btn" onclick="toggle('${q.id}')">${open ? '▲ 閉じる' : '▼ 開く'}</button>
+        </div>
+        ${open ? `<div class="answers-section">
+          ${ansHTML}
+          <button class="add-ans-btn" onclick="openModal('addA','${q.id}')">＋ 回答を追加</button>
+        </div>` : ''}
+      </div>`;
+  }).join('');
+}
+
+function toggle(id) {
+  expanded.has(id) ? expanded.delete(id) : expanded.add(id);
+  render();
+}
+
+// ── Modal ──
+function openModal(mode, qId = null, aId = null) {
+  modal = { mode, qId, aId };
+  const titles = { addQ: '質問を追加', editQ: '質問を編集', addA: '回答を追加', editA: '回答を編集' };
+  const rows   = { addQ: 3, editQ: 3, addA: 5, editA: 5 };
+  document.getElementById('sheetTitle').textContent = titles[mode];
+  const ta = document.getElementById('sheetTA');
+  ta.rows = rows[mode];
+  ta.value = '';
+  if (mode === 'editQ') {
+    const q = db.questions.find(q => q.id === qId);
+    ta.value = q ? q.text : '';
+  } else if (mode === 'editA') {
+    const q = db.questions.find(q => q.id === qId);
+    const a = q?.answers.find(a => a.id === aId);
+    ta.value = a ? a.text : '';
+  }
+  ta.placeholder = mode.includes('Q') ? '例：自己紹介をしてください。' : '回答を入力...';
+  document.getElementById('overlay').classList.remove('hidden');
+  setTimeout(() => ta.focus(), 80);
+}
+
+function closeModal() {
+  document.getElementById('overlay').classList.add('hidden');
+  modal = { mode: null, qId: null, aId: null };
+}
+
+function handleOverlayClick(e) {
+  if (e.target === document.getElementById('overlay')) closeModal();
+}
+
+function saveModal() {
+  const text = document.getElementById('sheetTA').value.trim();
+  if (!text) return;
+  const { mode, qId, aId } = modal;
+  if (mode === 'addQ') {
+    db.questions.push({ id: uid(), text, answers: [] });
+  } else if (mode === 'editQ') {
+    const q = db.questions.find(q => q.id === qId);
+    if (q) q.text = text;
+  } else if (mode === 'addA') {
+    const q = db.questions.find(q => q.id === qId);
+    if (q) { q.answers.push({ id: uid(), text }); expanded.add(qId); }
+  } else if (mode === 'editA') {
+    const q = db.questions.find(q => q.id === qId);
+    const a = q?.answers.find(a => a.id === aId);
+    if (a) a.text = text;
+  }
+  save(); closeModal(); render();
+}
+
+document.getElementById('sheetTA').addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); saveModal(); }
+});
+
+// ── Confirm ──
+function askDel(type, qId, aId = null) {
+  let msg = '';
+  if (type === 'question') {
+    const q = db.questions.find(q => q.id === qId);
+    msg = `「${(q?.text||'').slice(0,25)}…」を削除しますか？`;
+    confirmCb = () => { db.questions = db.questions.filter(q => q.id !== qId); expanded.delete(qId); save(); render(); };
+  } else {
+    msg = 'この回答を削除しますか？';
+    confirmCb = () => {
+      const q = db.questions.find(q => q.id === qId);
+      if (q) { q.answers = q.answers.filter(a => a.id !== aId); save(); render(); }
+    };
+  }
+  document.getElementById('confirmTitle').textContent = type === 'question' ? '質問を削除' : '回答を削除';
+  document.getElementById('confirmMsg').textContent = msg;
+  document.getElementById('confirmOverlay').classList.remove('hidden');
+}
+function closeConfirm() { document.getElementById('confirmOverlay').classList.add('hidden'); confirmCb = null; }
+function execConfirm() { if (confirmCb) confirmCb(); closeConfirm(); }
+
+// ── Study Mode ──
+function startStudy() {
+  if (!db.questions.length) { alert('質問がありません。先に質問を追加してください。'); return; }
+  study.list = [...db.questions];
+  study.idx = 0;
+  study.flipped = false;
+  document.getElementById('listView').classList.add('hidden');
+  document.getElementById('studyView').classList.add('active');
+  renderStudy();
+}
+
+function exitStudy() {
+  document.getElementById('studyView').classList.remove('active');
+  document.getElementById('listView').classList.remove('hidden');
+}
+
+function shuffleStudy() {
+  for (let i = study.list.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [study.list[i], study.list[j]] = [study.list[j], study.list[i]];
+  }
+  study.idx = 0;
+  study.flipped = false;
+  renderStudy();
+}
+
+function renderStudy() {
+  const q = study.list[study.idx];
+  const total = study.list.length;
+  document.getElementById('studyCnt').textContent = `${study.idx+1} / ${total}`;
+  document.getElementById('studyBar').style.width = `${((study.idx+1)/total)*100}%`;
+  document.getElementById('studyQ').textContent = q.text;
+  const aSection = document.getElementById('studyASection');
+  const hint = document.getElementById('studyHint');
+  if (study.flipped && q.answers.length) {
+    document.getElementById('studyA').textContent = q.answers.map(a => a.text).join('\n\n');
+    aSection.style.display = 'block';
+    hint.textContent = 'タップして閉じる';
+  } else {
+    aSection.style.display = 'none';
+    hint.textContent = q.answers.length ? 'タップして回答を表示' : '（回答が登録されていません）';
+  }
+  document.getElementById('btnPrev').disabled = study.idx === 0;
+  document.getElementById('btnNext').disabled = study.idx === total - 1;
+}
+
+function flipCard() {
+  if (!study.list[study.idx]?.answers.length) return;
+  study.flipped = !study.flipped;
+  renderStudy();
+}
+
+function nextQ() {
+  if (study.idx < study.list.length - 1) { study.idx++; study.flipped = false; renderStudy(); }
+}
+function prevQ() {
+  if (study.idx > 0) { study.idx--; study.flipped = false; renderStudy(); }
+}
+
+// タッチスワイプ
+let touchStartX = 0;
+document.getElementById('studyCard').addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+document.getElementById('studyCard').addEventListener('touchend', e => {
+  const dx = e.changedTouches[0].clientX - touchStartX;
+  if (Math.abs(dx) > 60) { dx < 0 ? nextQ() : prevQ(); }
+});
+
+// ── Init ──
+load(); render();
+</script>
+</body>
+</html>
